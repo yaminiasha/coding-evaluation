@@ -26,9 +26,48 @@ namespace MyOrganization
          */
         public Position? Hire(Name person, string title)
         {
+            Position? position = FindPositionByTitle(root, title);
+
+            if (position != null)
+            {
+                Employee employee = new Employee(position.GetDirectReports().Count , person);
+                position.SetEmployee(employee);
+                return position;
+            }
             //your code here
             return null;
         }
+
+        /// <summary>
+        /// Find Position of the by Title from the Root of the Organization
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="title"></param>
+        /// <returns></returns>
+        public Position? FindPositionByTitle(Position root, string title)
+        {
+            if (root == null)
+            {
+                return null;
+            }
+
+            if (root.GetTitle() == title)
+            {
+                return root;
+            }
+
+            foreach (Position sub in root.GetDirectReports())
+            {
+                Position? foundPosition = FindPositionByTitle(sub, title);
+                if (foundPosition != null)
+                {
+                    return foundPosition;
+                }
+            }
+
+            return null;
+        }
+
 
         override public string ToString()
         {
